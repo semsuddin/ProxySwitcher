@@ -1,0 +1,16 @@
+﻿<Window x:Class="ProxySwitcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProxySwitcher"
+        mc:Ignorable="d"
+        SizeToContent="WidthAndHeight"
+        Title="SS Proxy Handler v0.1" MaxHeight="450" MaxWidth="800" Background="#FFECFFFF">
+    <Grid Margin="5">
+        <Button Click="Button_Activate" VerticalAlignment="Top" Height="33" Width="161" HorizontalAlignment="Left">Activate proxy</Button>
+        <Button Click="Button_Deactivate" VerticalAlignment="Top" Height="33" Width="161" Margin="164,0,0,0" HorizontalAlignment="Left">Deactivate proxy</Button>
+        <TextBlock Name="ProxyText" FontSize="20" TextAlignment="Center" Margin="0,33,0,0" />
+        <TextBox Name="ProxyAddress" FontSize="20" TextAlignment="Center" Margin="0,66,0,0">IP</TextBox>
+    </Grid>
+</Window>
