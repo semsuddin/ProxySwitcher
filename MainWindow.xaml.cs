@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ProxySwitcher
 {
@@ -22,11 +23,18 @@ namespace ProxySwitcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly DispatcherTimer _dispatcherTimer = new DispatcherTimer();
+
         public MainWindow()
         {
             InitializeComponent();
             ProxyText.Text = ProxyHandler.CheckProxyState() ? "Proxy activated." : "Proxy deactivated.";
             ProxyAddress.Text = string.IsNullOrEmpty(ProxyHandler.GetProxyServer()) ? "10.10.10.10:8080" : ProxyHandler.GetProxyServer();
+
+            //  DispatcherTimer setup
+            _dispatcherTimer.Tick += new EventHandler(UpdateProxyState);
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
+            _dispatcherTimer.Start();
         }
         private void Button_Activate(object sender, RoutedEventArgs e)
         {
@@ -37,6 +45,20 @@ namespace ProxySwitcher
         {
             ProxyHandler.SetProxy(ProxyAddress.Text, false);
             ProxyText.Text = "Proxy deactivated.";
+        }
+
+        //  System.Windows.Threading.DispatcherTimer.Tick handler
+        //
+        //  Updates the current Proxy state display and calls
+        //  InvalidateRequerySuggested on the CommandManager to force 
+        //  the Command to raise the CanExecuteChanged event.
+        private void UpdateProxyState(object sender, EventArgs e)
+        {
+            // Updating the Label which displays the current second
+            ProxyText.Text = ProxyHandler.CheckProxyState() ? "Proxy activated." : "Proxy deactivated.";
+
+            // Forcing the CommandManager to raise the RequerySuggested event
+            CommandManager.InvalidateRequerySuggested();
         }
     }
     public static class ProxyHandler
