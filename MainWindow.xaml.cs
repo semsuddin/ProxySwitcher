@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,18 +26,47 @@ namespace ProxySwitcher
     public partial class MainWindow : Window
     {
         private readonly DispatcherTimer _dispatcherTimer = new DispatcherTimer();
+        private const string ENVIRONMENT_SELECTOR_KEY = "CurrentEnvironment";
+        private ComboBoxItem EnvironmentSelector_SelectedItem => EnvironmentSelector.SelectedItem as ComboBoxItem;
+
+        private Dictionary<string, string> UserEnvironmentVariables => GetUserEnvVars();
+
+        private static Dictionary<string, string> GetUserEnvVars()
+        {
+            var eVars = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+
+            foreach (DictionaryEntry dictionaryEntry in Environment.GetEnvironmentVariables(EnvironmentVariableTarget.User))
+            {
+                eVars.Add(dictionaryEntry.Key.ToString().ToLower(), dictionaryEntry.Value.ToString());
+            }
+
+            return eVars;
+        }
 
         public MainWindow()
         {
             InitializeComponent();
             ProxyText.Text = ProxyHandler.CheckProxyState() ? "Proxy activated." : "Proxy deactivated.";
             ProxyAddress.Text = string.IsNullOrEmpty(ProxyHandler.GetProxyServer()) ? "10.10.10.10:8080" : ProxyHandler.GetProxyServer();
+            EnvironmentSelector.SelectedItem = SetBaseEnvDropValue();
 
             //  DispatcherTimer setup
             _dispatcherTimer.Tick += new EventHandler(UpdateProxyState);
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
             _dispatcherTimer.Start();
         }
+
+        private object SetBaseEnvDropValue()
+        {
+            string currentEnvValue = UserEnvironmentVariables[ENVIRONMENT_SELECTOR_KEY];
+
+            return (from ComboBoxItem dropBoxItem 
+                    in EnvironmentSelector.Items 
+                    let value = dropBoxItem?.Name.ToString() 
+                    where value?.ToLower() == currentEnvValue.ToLower() 
+                    select dropBoxItem).FirstOrDefault();
+        }
+
         private void Button_Activate(object sender, RoutedEventArgs e)
         {
             ProxyHandler.SetProxy(ProxyAddress.Text);
@@ -59,6 +90,21 @@ namespace ProxySwitcher
 
             // Forcing the CommandManager to raise the RequerySuggested event
             CommandManager.InvalidateRequerySuggested();
+        }
+
+        private void EnvironmentSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems[0] is ComboBoxItem newItemSelected)
+            {
+                string valueOfSelection = newItemSelected.Name.ToLower();
+                Environment.SetEnvironmentVariable(ENVIRONMENT_SELECTOR_KEY, valueOfSelection, EnvironmentVariableTarget.User);
+            }
+        }
+
+        private void Button_Exterminate(object sender, RoutedEventArgs e)
+        {
+            var taskToKill = TaskToKill.Text;
+            System.Diagnostics.Process.Start("taskkill", "/F /IM " + taskToKill);
         }
     }
     public static class ProxyHandler
