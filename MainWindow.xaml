@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         SizeToContent="Manual"
         Title="SS Proxy Handler v0.1" 
-        Height="220"
+        Height="290"
         Width="300"
-        MinHeight="235" MinWidth="300"
-        MaxHeight="230" MaxWidth="300" 
+        MinHeight="290" MinWidth="300"
+        MaxHeight="290" MaxWidth="300" 
         Background="#FFECFFFF">
     <Grid Margin="5">
         <Button Click="Button_Activate" FontFamily="Calibri" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Height="33" Width="135" HorizontalAlignment="Left" Margin="0,0,0,0">Activate</Button>
@@ -30,5 +30,9 @@
         </ComboBox>
         <TextBox Name="TaskToKill" FontSize="20" FontWeight="Light" TextAlignment="Center" Margin="0,125,0,0" VerticalAlignment="Top">chromedriver.exe</TextBox>
         <Button Name="ExterminateButton" Click="Button_Exterminate" FontFamily="Calibri" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Height="29" Width="274" Margin="0,157,0,0" HorizontalAlignment="Left">Exterminate</Button>
-    </Grid>
+    <TextBox Name="TimeStart" ToolTip="Enter start time in format hh:mm" MaxLength="5" HorizontalAlignment="Left" Height="23" Margin="10,196,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+    <TextBox Name="TimeEnd" TextChanged="TimeEnd_OnTextChanged" ToolTip="Enter end time in format hh:mm" MaxLength="5" HorizontalAlignment="Left" Height="23" Margin="152,196,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+    <TextBlock Name="TimeCalc" HorizontalAlignment="Left" Margin="117,224,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+
+  </Grid>
 </Window>
