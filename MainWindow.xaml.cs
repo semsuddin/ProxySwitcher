@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -26,8 +27,7 @@ namespace ProxySwitcher
     public partial class MainWindow : Window
     {
         private readonly DispatcherTimer _dispatcherTimer = new DispatcherTimer();
-        private const string ENVIRONMENT_SELECTOR_KEY = "CurrentEnvironment";
-        private ComboBoxItem EnvironmentSelector_SelectedItem => EnvironmentSelector.SelectedItem as ComboBoxItem;
+        private const string EVAL_SELECTOR_KEY = "CurrentEnvironment";
 
         private Dictionary<string, string> UserEnvironmentVariables => GetUserEnvVars();
 
@@ -50,6 +50,10 @@ namespace ProxySwitcher
             ProxyAddress.Text = string.IsNullOrEmpty(ProxyHandler.GetProxyServer()) ? "10.10.10.10:8080" : ProxyHandler.GetProxyServer();
             EnvironmentSelector.SelectedItem = SetBaseEnvDropValue();
 
+            TimeStart.Text = "";
+            TimeEnd.Text = "";
+            TimeCalc.Text = "";
+
             //  DispatcherTimer setup
             _dispatcherTimer.Tick += new EventHandler(UpdateProxyState);
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
@@ -58,7 +62,7 @@ namespace ProxySwitcher
 
         private object SetBaseEnvDropValue()
         {
-            string currentEnvValue = UserEnvironmentVariables[ENVIRONMENT_SELECTOR_KEY];
+            string currentEnvValue = UserEnvironmentVariables[EVAL_SELECTOR_KEY];
 
             return (from ComboBoxItem dropBoxItem 
                     in EnvironmentSelector.Items 
@@ -92,12 +96,14 @@ namespace ProxySwitcher
             CommandManager.InvalidateRequerySuggested();
         }
 
+
+
         private void EnvironmentSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems[0] is ComboBoxItem newItemSelected)
             {
                 string valueOfSelection = newItemSelected.Name.ToLower();
-                Environment.SetEnvironmentVariable(ENVIRONMENT_SELECTOR_KEY, valueOfSelection, EnvironmentVariableTarget.User);
+                Environment.SetEnvironmentVariable(EVAL_SELECTOR_KEY, valueOfSelection, EnvironmentVariableTarget.User);
             }
         }
 
@@ -105,6 +111,16 @@ namespace ProxySwitcher
         {
             var taskToKill = TaskToKill.Text;
             System.Diagnostics.Process.Start("taskkill", "/F /IM " + taskToKill);
+        }
+
+        private void TimeEnd_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var t1 = DateTime.TryParse(TimeStart.Text, new DateTimeFormatInfo(), DateTimeStyles.None, out DateTime t1Result);
+            if (!t1) return;
+            var t2 = DateTime.TryParse(TimeEnd.Text, new DateTimeFormatInfo(), DateTimeStyles.None, out DateTime t2Result);
+            if (!t2) return;
+            var result = (t2Result - t1Result);
+            TimeCalc.Text = result.ToString(@"hh\:mm") + "h";
         }
     }
     public static class ProxyHandler
