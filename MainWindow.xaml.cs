@@ -48,7 +48,9 @@ namespace ProxySwitcher
             InitializeComponent();
             ProxyText.Text = ProxyHandler.CheckProxyState() ? "Proxy activated." : "Proxy deactivated.";
             ProxyAddress.Text = string.IsNullOrEmpty(ProxyHandler.GetProxyServer()) ? "10.10.10.10:8080" : ProxyHandler.GetProxyServer();
+            EnvironmentSelector.SelectionChanged -= EnvironmentSelector_OnSelectionChanged;
             EnvironmentSelector.SelectedItem = SetBaseEnvDropValue();
+            EnvironmentSelector.SelectionChanged += EnvironmentSelector_OnSelectionChanged;
 
             TimeStart.Text = "";
             TimeEnd.Text = "";
