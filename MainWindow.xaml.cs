@@ -28,7 +28,7 @@ namespace ProxySwitcher
     {
         private readonly DispatcherTimer _dispatcherTimer = new DispatcherTimer();
         private const string EVAL_SELECTOR_KEY = "CurrentEnvironment";
-
+        private EventHandler autoUpdateTimesEventHandler;
         private Dictionary<string, string> UserEnvironmentVariables => GetUserEnvVars();
 
         private static Dictionary<string, string> GetUserEnvVars()
@@ -52,14 +52,19 @@ namespace ProxySwitcher
             EnvironmentSelector.SelectedItem = SetBaseEnvDropValue();
             EnvironmentSelector.SelectionChanged += EnvironmentSelector_OnSelectionChanged;
 
-            TimeStart.Text = "";
-            TimeEnd.Text = "";
-            TimeCalc.Text = "";
+            Label_Eval.Content = $"{EVAL_SELECTOR_KEY}:";
+
+            TimeStart.Text = "08:00";
+            UpdateEndTimeToCurrent();
+            TimeCalc.Text = CalculateTimeDifference();
+            TimePause.Text = "00:00";
 
             //  DispatcherTimer setup
             _dispatcherTimer.Tick += new EventHandler(UpdateProxyState);
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
             _dispatcherTimer.Start();
+
+            autoUpdateTimesEventHandler = new EventHandler(AutoUpdateEndTimeAndProgressBar);
         }
 
         private object SetBaseEnvDropValue()
@@ -117,12 +122,58 @@ namespace ProxySwitcher
 
         private void TimeEnd_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var t1 = DateTime.TryParse(TimeStart.Text, new DateTimeFormatInfo(), DateTimeStyles.None, out DateTime t1Result);
+            var result = CalculateTimeDifference();
+            if (string.IsNullOrEmpty(result))
+                return;
+            TimeCalc.Text = result;
+            UpdateProgresBar();
+        }
+
+        private void UpdateProgresBar()
+        {
+            var t1 = TimeSpan.TryParse(TimeCalc.Text, out TimeSpan timeSpent);
             if (!t1) return;
+
+            var progressBarValue = (timeSpent.TotalHours / 8) * 100;
+
+            ProgressBar_TimeLeft.Value = progressBarValue;
+        }
+
+        private string CalculateTimeDifference()
+        {
+            var t1 = DateTime.TryParse(TimeStart.Text, new DateTimeFormatInfo(), DateTimeStyles.None, out DateTime t1Result);
+            if (!t1) return "";
             var t2 = DateTime.TryParse(TimeEnd.Text, new DateTimeFormatInfo(), DateTimeStyles.None, out DateTime t2Result);
-            if (!t2) return;
-            var result = (t2Result - t1Result);
-            TimeCalc.Text = result.ToString(@"hh\:mm") + "h";
+            if (!t2) return "";
+            var t3 = TimeSpan.TryParse(TimePause.Text, out TimeSpan t3Result);
+            if (!t3) return "";
+            return ((t2Result - t1Result) - t3Result).ToString(@"hh\:mm");
+        }
+
+        private void Button_SetCurrentTime_OnClick(object sender, RoutedEventArgs e)
+        {
+            AutoUpdateEndTimeAndProgressBar(null, null);
+        }
+
+        private void UpdateEndTimeToCurrent()
+        {
+            TimeEnd.Text = DateTime.Now.ToString(@"HH:mm");
+        }
+
+        private void AutoUpdateEndTimeAndProgressBar(object sender, EventArgs e)
+        {
+            UpdateEndTimeToCurrent();
+            UpdateProgresBar();
+        }
+
+        private void CheckBox_AutoUpdate_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Tick += autoUpdateTimesEventHandler;
+        }
+
+        private void CheckBox_AutoUpdate_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Tick -= autoUpdateTimesEventHandler;
         }
     }
     public static class ProxyHandler

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ProxySwitcher"
         mc:Ignorable="d"
         SizeToContent="Manual"
         Title="SS Proxy Handler v0.1" 
@@ -12,27 +11,66 @@
         MinHeight="290" MinWidth="300"
         MaxHeight="290" MaxWidth="300" 
         Background="#FFECFFFF">
-    <Grid Margin="5">
-        <Button Click="Button_Activate" FontFamily="Calibri" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Height="33" Width="135" HorizontalAlignment="Left" Margin="0,0,0,0">Activate</Button>
-        <Button Click="Button_Deactivate" FontFamily="Calibri" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Height="33" Width="135" Margin="139,0,0,0" HorizontalAlignment="Left">Deactivate</Button>
-        <TextBlock Name="ProxyText" TextAlignment="Center" FontSize="20" FontWeight="Light" Height="33" VerticalAlignment="Top" Margin="0,35,0,0" />
-        <TextBox Name="ProxyAddress" FontSize="20" FontWeight="Light" TextAlignment="Center" Margin="0,66,0,0" VerticalAlignment="Top">IP</TextBox>
-        <ComboBox Name="EnvironmentSelector" SelectionChanged="EnvironmentSelector_OnSelectionChanged" VerticalAlignment="Top" Margin="0,99,0,0" >
-            <ComboBoxItem Name="Dev1_OAuth" Content="Dev1 OAuth"></ComboBoxItem>
-            <ComboBoxItem Name="Dev2_OAuth" Content="Dev2 OAuth"></ComboBoxItem>
-            <ComboBoxItem Name="TestA_OAuth" Content="Test-A OAuth"></ComboBoxItem>
-            <ComboBoxItem Name="TestI_OAuth" Content="Test-I OAuth"></ComboBoxItem>
-            <ComboBoxItem Name="TestM_OAuth" Content="Test-M OAuth"></ComboBoxItem>
-            <ComboBoxItem Name="PreProd_OAuth" Content="PreProd OAuth"></ComboBoxItem>
-            <ComboBoxItem Name="TestI" Content="Test-I"></ComboBoxItem>
-            <ComboBoxItem Name="TestM" Content="Test-M"></ComboBoxItem>
-            <ComboBoxItem Name="PreProd" Content="PreProd"></ComboBoxItem>
-        </ComboBox>
-        <TextBox Name="TaskToKill" FontSize="20" FontWeight="Light" TextAlignment="Center" Margin="0,125,0,0" VerticalAlignment="Top">chromedriver.exe</TextBox>
-        <Button Name="ExterminateButton" Click="Button_Exterminate" FontFamily="Calibri" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Height="29" Width="274" Margin="0,157,0,0" HorizontalAlignment="Left">Exterminate</Button>
-    <TextBox Name="TimeStart" TextChanged="TimeEnd_OnTextChanged" ToolTip="Enter start time in format hh:mm" MaxLength="5" HorizontalAlignment="Left" Height="23" Margin="10,196,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-    <TextBox Name="TimeEnd" TextChanged="TimeEnd_OnTextChanged" ToolTip="Enter end time in format hh:mm" MaxLength="5" HorizontalAlignment="Left" Height="23" Margin="152,196,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-    <TextBlock Name="TimeCalc" HorizontalAlignment="Left" Margin="117,224,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-
+  <Grid Margin="5">
+    <Button Click="Button_Activate" FontFamily="Calibri" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Height="33" Width="135" HorizontalAlignment="Left" Margin="0,0,0,0">Activate</Button>
+    <Button Click="Button_Deactivate" FontFamily="Calibri" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Height="33" Width="135" Margin="139,0,0,0" HorizontalAlignment="Left">Deactivate</Button>
+    <TextBlock Name="ProxyText" TextAlignment="Center" FontSize="20" FontWeight="Light" Height="33" VerticalAlignment="Top" Margin="0,35,0,0" />
+    <TextBox Name="ProxyAddress" FontSize="20" FontWeight="Light" TextAlignment="Center" Margin="0,66,0,0" VerticalAlignment="Top">IP</TextBox>
+    <ComboBox Name="EnvironmentSelector" SelectionChanged="EnvironmentSelector_OnSelectionChanged" VerticalAlignment="Top" Margin="139,108,5,0" Height="26" >
+      <ComboBoxItem Name="Dev1_OAuth" Content="Dev1 OAuth"></ComboBoxItem>
+      <ComboBoxItem Name="Dev2_OAuth" Content="Dev2 OAuth"></ComboBoxItem>
+      <ComboBoxItem Name="TestA_OAuth" Content="Test-A OAuth"></ComboBoxItem>
+      <ComboBoxItem Name="TestI_OAuth" Content="Test-I OAuth"></ComboBoxItem>
+      <ComboBoxItem Name="TestM_OAuth" Content="Test-M OAuth"></ComboBoxItem>
+      <ComboBoxItem Name="PreProd_OAuth" Content="PreProd OAuth"></ComboBoxItem>
+      <ComboBoxItem Name="TestI" Content="Test-I"></ComboBoxItem>
+      <ComboBoxItem Name="TestM" Content="Test-M"></ComboBoxItem>
+      <ComboBoxItem Name="PreProd" Content="PreProd"></ComboBoxItem>
+    </ComboBox>
+    <TextBox Name="TaskToKill" FontSize="12" FontWeight="Light" TextAlignment="Center" Margin="83,148,51,0" VerticalAlignment="Top" Height="21">chromedriver.exe</TextBox>
+    <Button Name="ExterminateButton" Content="Kill" Click="Button_Exterminate" FontFamily="Calibri" FontSize="12" FontWeight="Light" VerticalAlignment="Top" Height="21" Width="48" Margin="224,148,0,0" HorizontalAlignment="Left"></Button>
+    <TextBox Name="TimeStart" TextChanged="TimeEnd_OnTextChanged" ToolTip="Enter start time in format hh:mm" MaxLength="5" HorizontalAlignment="Left" Height="17" Margin="60,187,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="48"/>
+    <TextBox Name="TimeEnd" TextChanged="TimeEnd_OnTextChanged" ToolTip="Enter end time in format hh:mm" MaxLength="5" HorizontalAlignment="Left" Height="17" Margin="198,187,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="49"/>
+    <TextBlock Name="TimeCalc" HorizontalAlignment="Left" Margin="198,211,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+    <Label Content="Start:" HorizontalAlignment="Left" Margin="21,181,0,0" VerticalAlignment="Top" Height="23"/>
+    <Label Content="Finish:" HorizontalAlignment="Left" Margin="153,181,0,0" VerticalAlignment="Top" Height="23"/>
+    <Label Content="Total:" HorizontalAlignment="Left" Margin="155,206,0,0" VerticalAlignment="Top" Height="23"/>
+    <TextBox x:Name="TimePause" TextChanged="TimeEnd_OnTextChanged" ToolTip="Enter start time in format hh:mm" MaxLength="5" HorizontalAlignment="Left" Height="18" Margin="60,211,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="48"/>
+    <Label Content="Pause:" HorizontalAlignment="Left" Margin="15,206,0,0" VerticalAlignment="Top" Height="23"/>
+    <Button Name="Button_SetCurrentTime" Content="_" Click="Button_SetCurrentTime_OnClick" HorizontalAlignment="Left" Margin="252,191,0,0" VerticalAlignment="Top" Width="11" Height="10"/>
+    <Label Content="Process name:" HorizontalAlignment="Left" Margin="0,144,0,0" FontSize="12" VerticalAlignment="Top" Height="24" Width="94"/>
+    <Label Name="Label_Eval" Content="EVAL:" HorizontalAlignment="Left" Margin="-5,108,0,0" FontSize="12" VerticalAlignment="Top" Height="25" Width="162"/>
+    <ProgressBar Name="ProgressBar_TimeLeft" HorizontalAlignment="Left" IsIndeterminate="False" Height="5" Margin="0,234,0,0" VerticalAlignment="Top" Width="274"/>
+    <Separator HorizontalAlignment="Left" Height="3" Margin="-5,100,-5,0" VerticalAlignment="Top" Width="292" RenderTransformOrigin="0.5,0.5">
+      <Separator.RenderTransform>
+        <TransformGroup>
+          <ScaleTransform ScaleY="-1"/>
+          <SkewTransform/>
+          <RotateTransform/>
+          <TranslateTransform/>
+        </TransformGroup>
+      </Separator.RenderTransform>
+    </Separator>
+    <Separator HorizontalAlignment="Left" Height="3" Margin="-5,139,-5,0" VerticalAlignment="Top" Width="292" RenderTransformOrigin="0.5,0.5">
+      <Separator.RenderTransform>
+        <TransformGroup>
+          <ScaleTransform ScaleY="-1"/>
+          <SkewTransform/>
+          <RotateTransform/>
+          <TranslateTransform/>
+        </TransformGroup>
+      </Separator.RenderTransform>
+    </Separator>
+    <Separator HorizontalAlignment="Left" Height="3" Margin="-5,176,-5,0" VerticalAlignment="Top" Width="292" RenderTransformOrigin="0.5,0.5">
+      <Separator.RenderTransform>
+        <TransformGroup>
+          <ScaleTransform ScaleY="-1"/>
+          <SkewTransform/>
+          <RotateTransform/>
+          <TranslateTransform/>
+        </TransformGroup>
+      </Separator.RenderTransform>
+    </Separator>
+    <CheckBox Name="CheckBox_AutoUpdate" Checked="CheckBox_AutoUpdate_OnChecked" Unchecked="CheckBox_AutoUpdate_OnUnchecked" Content="" HorizontalAlignment="Left" FontSize="8" Margin="252,212,0,0" VerticalAlignment="Top" Height="15" Width="20"/>
   </Grid>
 </Window>
